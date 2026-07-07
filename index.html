@@ -42,6 +42,27 @@
   </main>
   <footer class="footer"><div class="wrap">Filipe Yabok · Edite com Agentes · página conceito com espaço de VSL.</div></footer>
   <script>
+    const checkoutBaseUrl = "https://pay.kirvano.com/24caa049-2cac-47d5-97f8-dc05786fb0e5";
+    const appendTrackingToCheckout = () => {
+      const incomingParams = new URLSearchParams(window.location.search);
+      if (!incomingParams.toString()) return;
+
+      document.querySelectorAll('a.buy-btn[href^="https://pay.kirvano.com/"]').forEach((link) => {
+        const checkoutUrl = new URL(checkoutBaseUrl);
+        incomingParams.forEach((value, key) => {
+          checkoutUrl.searchParams.set(key, value);
+        });
+        link.href = checkoutUrl.toString();
+      });
+    };
+
+    document.querySelectorAll('a.buy-btn[href^="https://pay.kirvano.com/"]').forEach((link) => {
+      link.addEventListener("click", () => {
+        if (window.fbq) fbq("track", "InitiateCheckout");
+      });
+    });
+    appendTrackingToCheckout();
+
     const heroVideoCard = document.getElementById("hero-video-card");
     const updateHeroVideoCard = () => {
       if (!heroVideoCard || window.innerWidth <= 860) return;
